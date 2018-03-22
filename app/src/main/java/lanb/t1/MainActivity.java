@@ -52,7 +52,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
     //翻译
     public static final int SHOW_RESPONSE = 0;
-    private TextView textView_response;
+    private TextView textView_response,srcT,tgtT;
+
+    public int flag=0;//翻译类型0=中-日；1=日-中
+    public String srcid="ch",tgtid="jp";
+
     //新建Handler的对象，在这里接收Message，然后更新TextView控件的内容
     private Handler handler = new Handler() {
         @Override
@@ -88,6 +92,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
 
         //翻译
         textView_response = (TextView)findViewById(R.id.TextView1);
+        srcT = (TextView)findViewById(R.id.srcT);
+        tgtT = (TextView)findViewById(R.id.tgtT);
     }
 
 
@@ -136,6 +142,22 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             case R.id.btrans:
                 sendRequestWithHttpClient();
                 //Toast.makeText(this, "hhh", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.bT:
+                if(flag==0){
+                    srcid="ch";
+                    tgtid="jp";
+                    srcT.setText("中文");
+                    tgtT.setText("日本语");
+                    flag=1;
+                }
+                else{
+                    srcid="jp";
+                    tgtid="ch";
+                    srcT.setText("日本语");
+                    tgtT.setText("中文");
+                    flag=0;
+                }
                 break;
         }
     }
@@ -265,8 +287,8 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                 // 设置HTTP POST请求参数必须用NameValuePair对象
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 String gz=mResultText.getText().toString();
-                params.add(new BasicNameValuePair("src_id", "ch"));
-                params.add(new BasicNameValuePair("tgt_id", "jp"));
+                params.add(new BasicNameValuePair("src_id", srcid));
+                params.add(new BasicNameValuePair("tgt_id", tgtid));
                 params.add(new BasicNameValuePair("sentence", gz));
                 //params.add(new BasicNameValuePair("sentence", "天气真好"));
                 HttpResponse httpResponse = null;
